@@ -1,16 +1,19 @@
 class Player
+  # represents participants in the game
+  attr_accessor :deck, :score, :hand
 
-  attr_accessor :deck
-
-  def initialize(deck=nil)
+  def initialize(deck)
     self.deck = deck
+    self.score = 0
+    self.hand = []
   end
 
   def hit
-    self.deck.cards.pop(1)
+    self.hand.append(self.deck.cards.pop)
   end
 
   def stay
+    return
   end
 
   def deal
