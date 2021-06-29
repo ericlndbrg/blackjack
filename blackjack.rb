@@ -33,32 +33,15 @@ def display_hand(hand)
   results.join(' - ')
 end
 
-def get_dealer_action(dealer)
-  # DRY this up
-  calculate_value(dealer.hand, dealer)
-  if dealer.score < 17
-    until dealer.score >= 17
-      dealer.hit
-      puts 'Dealer Hits!'
-      puts "Dealer's Hand: #{display_hand(dealer.hand)}, Dealer's Score: #{calculate_value(dealer.hand, dealer)}"
-    end
-  end
-end
-
-def get_player_action(player, dealer)
-  # DRY this up
+def get_player_action(player)
   calculate_value(player.hand, player)
   if player.score < 17
     until player.score >= 17
       player.hit
-      puts 'Player Hits!'
-      puts "Player's Hand: #{display_hand(player.hand)}, Player's Score: #{calculate_value(player.hand, player)}"
+      puts "#{player.name}'s Hand: #{display_hand(player.hand)}, #{player.name}'s Score: #{calculate_value(player.hand, player)}"
     end
-  else
-    player.stay
-    puts 'Player Stays!'
   end
-  get_dealer_action(dealer)
+  player.stay
 end
 
 def blackjack
@@ -69,35 +52,48 @@ def blackjack
   deck.cards.shuffle!
 
   # make a player and a dealer
-  dealer = Player.new(deck)
-  player = Player.new(deck)
+  # pass in the deck (by reference) so that both
+  # the player and the dealer have access to the same deck
+  dealer = Player.new(deck, 'Dealer')
+  player = Player.new(deck, 'Player')
 
   # deal cards
   player.hand = dealer.deal
   dealer.hand = dealer.deal
 
   # display hands from deal
-  puts "Player's Hand: #{display_hand(player.hand)}, Player's Score: #{calculate_value(player.hand, player)}"
-  puts "Dealer's Hand: #{display_hand(dealer.hand)}, Dealer's Score: #{calculate_value(dealer.hand, dealer)}"
+  puts "#{player.name}'s Hand: #{display_hand(player.hand)}, #{player.name}'s Score: #{calculate_value(player.hand, player)}"
+  puts "#{dealer.name}'s Hand: #{display_hand(dealer.hand)}, #{dealer.name}'s Score: #{calculate_value(dealer.hand, dealer)}"
 
-  # prompt player for hit/stand
-  get_player_action(player, dealer)
+  # player plays the hand
+  get_player_action(player)
+
+  # dealer's turn, but only if the player didn't bust
+  get_player_action(dealer) if player.score < 22
 
   # display winner
   puts "Player's Score: #{player.score}"
   puts "Dealer's Score: #{dealer.score}"
-  # look into a double bust situation
-  if player.score > 21
-    puts 'Dealer Wins!'
-  elsif dealer.score > 21
-    puts 'Player Wins!'
-  else
-    # clean this up
-    if player.score > dealer.score
-      puts 'Player Wins!'
-    elsif player.score < dealer.score
+
+  if [player.score, dealer.score].max > 21
+    # at least one player busted
+    if (player.score > 21 && dealer.score <= 21) || (player.score > 21 && dealer.score > 21)
+      # the dealer wins no matter if only the player busts, or both bust
       puts 'Dealer Wins!'
-    elsif player.score == dealer.score
+    else
+      # dealer busts, player doesn't
+      puts 'Player Wins!'
+    end
+  else
+    # neither player busted
+    if player.score < dealer.score
+      # player's score is less than the dealer's
+      puts 'Dealer Wins!'
+    elsif player.score > dealer.score
+      # player's score is greater than the dealer's
+      puts 'Player Wins!'
+    else
+      # player's score is equal to the dealer's
       puts 'Push!'
     end
   end
