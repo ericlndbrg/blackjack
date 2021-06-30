@@ -1,5 +1,6 @@
 class Deck
   # represents a deck of cards
+  require_relative './card'
   attr_accessor :cards
 
   def initialize

@@ -1,9 +1,9 @@
 class Player
   # represents participants in the game
-  attr_accessor :deck, :score, :hand, :name
+  attr_accessor :cards, :score, :hand, :name
 
-  def initialize(deck, name)
-    self.deck = deck
+  def initialize(cards, name)
+    self.cards = cards
     self.score = 0
     self.hand = []
     self.name = name
@@ -11,7 +11,7 @@ class Player
 
   def hit
     puts "#{self.name} Hits!"
-    self.hand.append(self.deck.cards.pop)
+    self.hand.append(self.cards.pop)
   end
 
   def stay
@@ -24,7 +24,7 @@ class Player
   end
 
   def deal
-    self.deck.cards.pop(2)
+    self.cards.pop(2)
   end
 
 end
