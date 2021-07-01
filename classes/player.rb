@@ -24,7 +24,12 @@ class Player
   end
 
   def deal
-    self.cards.pop(2)
+    if self.name == 'Dealer'
+      self.cards.pop(2)
+    else
+      puts 'Only dealers can deal cards!'
+      return
+    end
   end
 
 end
