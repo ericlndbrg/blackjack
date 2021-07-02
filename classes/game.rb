@@ -22,10 +22,12 @@ class Game
     # play a single hand
     if self.player_preference == 1.to_s
       blackjack
+      puts '' # spacer for readability
     else
       # play until there are only 2 decks left in the shoe
-      until self.player.cards.length < 104
+      until self.player.cards.length <= 104
         blackjack
+        puts '' # spacer for readability
       end
       puts 'Time to reshuffle what\'s left in the shoe!'
       self.card_shoe.cards.shuffle!
