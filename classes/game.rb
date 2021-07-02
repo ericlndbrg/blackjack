@@ -25,7 +25,7 @@ class Game
       puts '' # spacer for readability
     else
       # play until there are only 2 decks left in the shoe
-      until self.player.cards.length < 104
+      until self.player.cards.length <= 104
         blackjack
         puts '' # spacer for readability
       end
